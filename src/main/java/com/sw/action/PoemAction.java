@@ -51,41 +51,47 @@ public class PoemAction {
             List<String> gushiList = new ArrayList<String>();
             //处理得到古诗
             char xs[] = poemRequest.getXs().toCharArray();
+            Random random = new Random();
             for(char ch : xs) {
                 if(gushiJu == 4){
                     break;
                 }
-                for (EsEntry esEntry : resultPoem) {
-                    String temp = esEntry.getContent1();
-                    String pzTemp = esEntry.getPz1();
-                     if(isNull(temp,pzTemp) && temp.length() == ziShu && pzTemp.endsWith(String.valueOf(ch))){
+                for (int i = 0 ;i < 10000 ; i++) {
+                    EsEntry esEntry =resultPoem.get( random.nextInt(resultPoem.size()));
+                    if(null == esEntry){
+                        continue;
+                    }
+                    String temp = getTrim(esEntry.getContent1());
+                    String pzTemp = getTrim(esEntry.getPz1());
+                     if(!isNull(temp,pzTemp) && temp.length() == ziShu && pzTemp.endsWith(String.valueOf(ch))){
                             if(!gushiList.contains(temp)){
                                 gushiList.add(temp);
                                 gushiJu ++;
                                 break;
                             }
                      }
-                    temp = esEntry.getContent2();
-                    pzTemp = esEntry.getPz2();
-                    if(isNull(temp,pzTemp) && temp.length() == ziShu && pzTemp.endsWith(String.valueOf(ch))){
+                    temp = getTrim(esEntry.getContent2());
+                    pzTemp = getTrim(esEntry.getPz2());
+                    if(!isNull(temp,pzTemp) && temp.length() == ziShu && pzTemp.endsWith(String.valueOf(ch))){
                         if(!gushiList.contains(temp)){
                             gushiList.add(temp);
                             gushiJu ++;
                             break;
                         }
                     }
-                    temp = esEntry.getContent3();
-                    pzTemp = esEntry.getPz3();
-                    if(isNull(temp,pzTemp) && temp.length() == ziShu && pzTemp.endsWith(String.valueOf(ch))){
+
+                    temp = getTrim(esEntry.getContent3());
+                    pzTemp = getTrim(esEntry.getPz3());
+                    if(!isNull(temp,pzTemp) && temp.length() == ziShu && pzTemp.endsWith(String.valueOf(ch))){
                         if(!gushiList.contains(temp)){
                             gushiList.add(temp);
                             gushiJu ++;
                             break;
                         }
                     }
-                    temp = esEntry.getContent4();
-                    pzTemp = esEntry.getPz4();
-                    if(isNull(temp,pzTemp) && temp.length() == ziShu && pzTemp.endsWith(String.valueOf(ch))){
+                    temp = getTrim(esEntry.getContent4());
+                    pzTemp = getTrim(esEntry.getPz4());
+                    if(!isNull(temp,pzTemp) && temp.length() == ziShu && pzTemp.endsWith(String.valueOf(ch))){
                         if(!gushiList.contains(temp)){
                             gushiList.add(temp);
                             gushiJu ++;
@@ -100,7 +106,10 @@ public class PoemAction {
         }else {
             guShi = "</br></br></br></br></br></br><font color=\"red\" size=\"20px\">不知道你在说什么~~~~~</font>";
         }
-        poemRequest.setTargetPoem(guShi);
+        if(null == guShi || guShi.length() < 10){
+            guShi = "</br></br></br></br></br></br><font color=\"red\" size=\"20px\">不知道你在说什么~~~~~</font>";
+        }
+        poemRequest.setTargetPoem("<font  size=\"20px\">"+guShi + "</font>");
         return "search.jsp";
     }
 
@@ -131,10 +140,16 @@ public class PoemAction {
 
     public boolean isNull(String... args){
         for(String s : args){
-            if(null == s || s.length() < 1){
-                return false;
+            if(null == s || s.trim().length() < 1){
+                return true;
             }
         }
-        return true;
+        return false;
+    }
+
+    public String getTrim(String param){
+        if(null == param)
+            return  null;
+        return param.replace((char) 12288, ' ').trim().replace("\t","");
     }
 }

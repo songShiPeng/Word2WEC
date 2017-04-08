@@ -58,7 +58,7 @@ public class ElasticsearchClient {
 //                        .must(QueryBuilders.regexpQuery("content2","^.{5}$"))
 //                        .must(QueryBuilders.regexpQuery("content3","^.{5}$"))
 //                        .must(QueryBuilders.regexpQuery("content4","^.{5}$"));
-                SearchResponse searchResponse = transportClient.prepareSearch(indexName).setTypes(typeName).setSearchType(SearchType.DFS_QUERY_AND_FETCH).setSize(1000)
+                SearchResponse searchResponse = transportClient.prepareSearch(indexName).setTypes(typeName).setSearchType(SearchType.DFS_QUERY_AND_FETCH)
                         .setQuery(boolQueryBuilder).execute().actionGet();
                 SearchHit[] hitArray = searchResponse.getHits().getHits();
                 for (SearchHit searchHit : hitArray) {
