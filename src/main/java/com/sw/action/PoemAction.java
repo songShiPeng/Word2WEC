@@ -16,6 +16,7 @@ import java.util.*;
  * Created by songshipeng on 2017/3/20.
  */
 @Controller
+@RequestMapping(value = "/wll")
 public class PoemAction {
 
     @Autowired
@@ -101,7 +102,7 @@ public class PoemAction {
                 }
             }
             for(String out : gushiList){
-                guShi = guShi + out +"</br>";
+                guShi = guShi + out +"</br></br>";
             }
         }else {
             guShi = "</br></br></br></br></br></br><font color=\"red\" size=\"20px\">不知道你在说什么~~~~~</font>";
