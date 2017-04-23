@@ -47,8 +47,9 @@ public class ElasticsearchClient {
     }
 
     public List<EsEntry> getRelventPoem(List<String> appreciations,String ziShu){
+        List<EsEntry> esEntryList = new ArrayList<EsEntry>();
         try {
-            List<EsEntry> esEntryList = new ArrayList<EsEntry>();
+
             if (null != appreciations && appreciations.size() > 0) {
                 BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
                 for (String param : appreciations) {
@@ -69,8 +70,9 @@ public class ElasticsearchClient {
             }
             return esEntryList;
         }catch (Throwable throwable){
-            return null;
+            throwable.printStackTrace();
         }
+        return esEntryList;
     }
 
     public List<EsEntry> test(List<String> appreciations,String ziShu){

@@ -8,6 +8,7 @@ public class PoemRequest {
     private String ziShu;//5或者7
     private String xs;//诗歌形式
     private String targetPoem;//返回给用户的古诗
+    private String images;
 
     public String getHanZi() {
         return hanZi;
@@ -39,5 +40,13 @@ public class PoemRequest {
 
     public void setTargetPoem(String targetPoem) {
         this.targetPoem = targetPoem;
+    }
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
     }
 }

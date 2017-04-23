@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.ServletContext;
+import java.io.File;
 import java.util.*;
 
 /**
@@ -34,7 +36,24 @@ public class PoemAction {
      * 根据前台输入的汉字获取古诗
      */
     @RequestMapping(value = "/getPoem.mvc")
-    public String getPoem(PoemRequest poemRequest,Model model){
+    public String getPoem(String from,PoemRequest poemRequest,Model model){
+        //检测图片作诗
+        if("1".equals(from)){
+
+            File file = new File(System.getProperty("Word2WEC.folder")+"/poemImages");
+            System.out.println(System.getProperty("Word2WEC.folder"));
+            System.out.println(file.getAbsoluteFile());
+            if(file.exists()){
+                File[] files = file.listFiles();
+                Random random = new Random();
+                File targetFile = files[random.nextInt(files.length)];
+                if(null != targetFile) {
+                    poemRequest.setImages(targetFile.getName());
+                    poemRequest.setHanZi(targetFile.getName().substring(0,targetFile.getName().indexOf(".")));
+                }
+
+            }
+        }
         int ziShu = Integer.valueOf(poemRequest.getZiShu());
         Set<WordEntry> result = new TreeSet<WordEntry>();
         result = word2VEC.distance(poemRequest.getHanZi());//手动输入要计算的相关词
@@ -48,56 +67,60 @@ public class PoemAction {
                 parmStr.add(word.name);
             }
             List<EsEntry> resultPoem= elasticsearchClient.getRelventPoem(parmStr,poemRequest.getZiShu());
+
             int gushiJu = 0;
             List<String> gushiList = new ArrayList<String>();
-            //处理得到古诗
-            char xs[] = poemRequest.getXs().toCharArray();
-            Random random = new Random();
-            for(char ch : xs) {
-                if(gushiJu == 4){
-                    break;
-                }
-                for (int i = 0 ;i < 10000 ; i++) {
-                    EsEntry esEntry =resultPoem.get( random.nextInt(resultPoem.size()));
-                    if(null == esEntry){
-                        continue;
+            if(resultPoem.size() > 1){
+                //处理得到古诗
+                char xs[] = poemRequest.getXs().toCharArray();
+                Random random = new Random();
+                for(char ch : xs) {
+                    if (gushiJu == 4) {
+                        break;
                     }
-                    String temp = getTrim(esEntry.getContent1());
-                    String pzTemp = getTrim(esEntry.getPz1());
-                     if(!isNull(temp,pzTemp) && temp.length() == ziShu && pzTemp.endsWith(String.valueOf(ch))){
-                            if(!gushiList.contains(temp)){
+                    for (int i = 0; i < 10000; i++) {
+                        EsEntry esEntry = resultPoem.get(random.nextInt(resultPoem.size()));
+                        if (null == esEntry) {
+                            continue;
+                        }
+                        String temp = getTrim(esEntry.getContent1());
+                        String pzTemp = getTrim(esEntry.getPz1());
+                        if (!isNull(temp, pzTemp) && temp.length() == ziShu && pzTemp.endsWith(String.valueOf(ch))) {
+                            if (!gushiList.contains(temp)) {
                                 gushiList.add(temp);
-                                gushiJu ++;
+                                gushiJu++;
                                 break;
                             }
-                     }
-                    temp = getTrim(esEntry.getContent2());
-                    pzTemp = getTrim(esEntry.getPz2());
-                    if(!isNull(temp,pzTemp) && temp.length() == ziShu && pzTemp.endsWith(String.valueOf(ch))){
-                        if(!gushiList.contains(temp)){
-                            gushiList.add(temp);
-                            gushiJu ++;
-                            break;
                         }
-                    }
+                        temp = getTrim(esEntry.getContent2());
+                        pzTemp = getTrim(esEntry.getPz2());
+                        if (!isNull(temp, pzTemp) && temp.length() == ziShu && pzTemp.endsWith(String.valueOf(ch))) {
+                            if (!gushiList.contains(temp)) {
+                                gushiList.add(temp);
+                                gushiJu++;
+                                break;
+                            }
+                        }
 
-                    temp = getTrim(esEntry.getContent3());
-                    pzTemp = getTrim(esEntry.getPz3());
-                    if(!isNull(temp,pzTemp) && temp.length() == ziShu && pzTemp.endsWith(String.valueOf(ch))){
-                        if(!gushiList.contains(temp)){
-                            gushiList.add(temp);
-                            gushiJu ++;
-                            break;
+                        temp = getTrim(esEntry.getContent3());
+                        pzTemp = getTrim(esEntry.getPz3());
+                        if (!isNull(temp, pzTemp) && temp.length() == ziShu && pzTemp.endsWith(String.valueOf(ch))) {
+                            if (!gushiList.contains(temp)) {
+                                gushiList.add(temp);
+                                gushiJu++;
+                                break;
+                            }
                         }
-                    }
-                    temp = getTrim(esEntry.getContent4());
-                    pzTemp = getTrim(esEntry.getPz4());
-                    if(!isNull(temp,pzTemp) && temp.length() == ziShu && pzTemp.endsWith(String.valueOf(ch))){
-                        if(!gushiList.contains(temp)){
-                            gushiList.add(temp);
-                            gushiJu ++;
-                            break;
+                        temp = getTrim(esEntry.getContent4());
+                        pzTemp = getTrim(esEntry.getPz4());
+                        if (!isNull(temp, pzTemp) && temp.length() == ziShu && pzTemp.endsWith(String.valueOf(ch))) {
+                            if (!gushiList.contains(temp)) {
+                                gushiList.add(temp);
+                                gushiJu++;
+                                break;
+                            }
                         }
+
                     }
                 }
             }
@@ -105,12 +128,12 @@ public class PoemAction {
                 guShi = guShi + out +"</br></br>";
             }
         }else {
-            guShi = "</br></br></br></br></br></br><font color=\"red\" size=\"20px\">不知道你在说什么~~~~~</font>";
+            guShi = "</br></br></br></br></br></br><font color=\"red\" size=\"10px\">不知道你在说什么~~~~~</font>";
         }
         if(null == guShi || guShi.length() < 10){
-            guShi = "</br></br></br></br></br></br><font color=\"red\" size=\"20px\">不知道你在说什么~~~~~</font>";
+            guShi = "</br></br></br></br></br></br><font color=\"red\" size=\"10px\">不知道你在说什么~~~~~</font>";
         }
-        poemRequest.setTargetPoem("<font  size=\"20px\">"+guShi + "</font>");
+        poemRequest.setTargetPoem("<font  size=\"5px\">"+guShi + "</font>");
         return "search.jsp";
     }
 
