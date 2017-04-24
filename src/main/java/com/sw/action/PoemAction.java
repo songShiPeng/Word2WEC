@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.util.*;
 
@@ -55,8 +54,17 @@ public class PoemAction {
             }
         }
         int ziShu = Integer.valueOf(poemRequest.getZiShu());
-        Set<WordEntry> result = new TreeSet<WordEntry>();
-        result = word2VEC.distance(poemRequest.getHanZi());//手动输入要计算的相关词
+       TreeSet<WordEntry> firstResult = new TreeSet<WordEntry>();
+        firstResult = word2VEC.distance(poemRequest.getHanZi());//手动输入要计算的相关词
+        TreeSet<WordEntry> result = new TreeSet<WordEntry>();
+        int ri = 0;
+        for(WordEntry wordEntry : firstResult){
+            result.add(wordEntry);
+            ri++;
+            if(ri > 5){
+                break;
+            }
+        }
         String guShi = "";//要返回的古诗
         List<String> parmStr = new ArrayList<String>();
         parmStr.add(poemRequest.getHanZi());
@@ -132,6 +140,9 @@ public class PoemAction {
         }
         if(null == guShi || guShi.length() < 10){
             guShi = "</br></br></br></br></br></br><font color=\"red\" size=\"10px\">不知道你在说什么~~~~~</font>";
+        }
+        if("1".equals(from)){
+            poemRequest.setHanZi("");
         }
         poemRequest.setTargetPoem("<font  size=\"5px\">"+guShi + "</font>");
         return "search.jsp";

@@ -10,7 +10,6 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.script.Script;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
@@ -30,6 +29,9 @@ public class ElasticsearchClient {
     static String indexName = "pz";
     static String typeName = "gushiwen";
 
+    /**
+     * 连接es
+     */
     @PostConstruct
     public void initEs() {
         try {

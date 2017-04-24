@@ -108,7 +108,7 @@ public class Word2VEC {
      * @param word
      * @return
      */
-    public Set<WordEntry> distance(String word) {
+    public TreeSet<WordEntry> distance(String word) {
         float[] wordVector = getWordVector(word);
         if (wordVector == null) {
             return null;
