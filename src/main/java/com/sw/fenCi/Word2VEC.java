@@ -39,9 +39,9 @@ public class Word2VEC {
 
     @PostConstruct
     public void afterPropertiesSet() throws IOException {
-//        loadModel("D:\\毕设\\ESpoem-vec.bin");
+        loadModel("D:\\毕设\\ESpoem-vec.bin");
 
-        loadModel("F:\\ownDev\\devData\\ESpoem-vec.bin");
+//        loadModel("F:\\ownDev\\devData\\ESpoem-vec.bin");
         System.out.println("One word analysis");
         Set<WordEntry> result = new TreeSet<WordEntry>();
         result = distance("思乡");//手动输入要计算的相关词
