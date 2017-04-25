@@ -74,9 +74,7 @@ public class ElasticsearchClient {
                         esEntryList.add(esEntry);
                     }
                 }
-                if(null == esEntryList || esEntryList.size() < 10){
-                    esEntryList.addAll(changJianList);
-                }
+                
             }
             return esEntryList;
         }catch (Throwable throwable){
