@@ -19,7 +19,30 @@
 <header>
 
 </header>
+<style>
+	#targetPoem{
+		background-repeat: no-repeat;
+		position: relative;
+		left: 200px;
+	}
+	#targetPoemContent{
+		background-repeat: no-repeat;
+		color: black;
+		position: relative;
+		left: 80px;
+		top: 10px;
+	}
+</style>
+<script type="application/javascript" src="/wll/js/jquery-3.2.1.min.js"></script>
 <script type="application/javascript">
+	$(function () {
+		var bImages= $('#bImages').val();
+		if(null != bImages){
+//            $('#targetPoem').css.append("'background-image' : '/poemImages/"+bImages+" 'background-repeat : no-repeat");
+		    $('#targetPoem').css("background-image","url(/poemImages/"+bImages+")");
+		}
+
+    });
 	function submitImage() {
         var x=document.getElementById("fromInput");  // 找到元素
         x.value="1";
@@ -48,32 +71,28 @@
 	<form:option value="ZPZP" label="仄平仄平"/>
 	<form:option value="ZZPZ" label="仄仄平仄"/>
 </form:select>
-	<select>
-		<option>诗词类型</option>
-		<option>唐诗</option>
-		<option>宋词</option>
-	</select>
+
 	<button type="submit">开始作诗</button>
 		<input type="hidden" name="from"  id ="fromInput" value="6"></input>
 	<button type="submit">换一换</button>
         <input type="button"  onclick="javascript:submitImage();" value="图片作诗"/>
 	</form>
-
+<input type="hidden" value="${poemRequest.images}" id="bImages"/>
 </div>
 
 <div class="blank"></div>
-<article style="margin-top: -18px;">
+<article style="margin-top: -18px;" id = "article" style="">
 	<div class="content">
 		<div class="bloglist">
 			<!--article begin-->
-			<ul>
-				<c:if test="${not empty poemRequest.images}">
-				<image src="/poemImages/${poemRequest.images}" width="100px" align="top"></image>
-				</c:if>
-			</ul>
-			<ul>
 
-				<p>${poemRequest.targetPoem}</p>
+			<ul>
+				<div id="targetPoem" color="red">
+					<div id = "targetPoemContent">
+					${poemRequest.targetPoem}
+					</div>
+
+				</div>
 			</ul>
 			<!--article end-->
 		</div>

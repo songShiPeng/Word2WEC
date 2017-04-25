@@ -50,6 +50,7 @@ public class ElasticsearchClient {
 
     public List<EsEntry> getRelventPoem(List<String> appreciations,String ziShu){
         List<EsEntry> esEntryList = new ArrayList<EsEntry>();
+        List<EsEntry> changJianList = new ArrayList<EsEntry>();
         try {
 
             if (null != appreciations && appreciations.size() > 0) {
@@ -67,7 +68,14 @@ public class ElasticsearchClient {
                 for (SearchHit searchHit : hitArray) {
                     EsEntry esEntry = new EsEntry();
                     BeanUtils.populate(esEntry, searchHit.getSource());
-                    esEntryList.add(esEntry);
+                    if(FilterEs.esIds.contains(searchHit.getId())){
+                        changJianList.add(esEntry);
+                    }else {
+                        esEntryList.add(esEntry);
+                    }
+                }
+                if(null == esEntryList || esEntryList.size() < 10){
+                    esEntryList.addAll(changJianList);
                 }
             }
             return esEntryList;
