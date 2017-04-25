@@ -22,6 +22,7 @@
 <style>
 	#targetPoem{
 		background-repeat: no-repeat;
+		background-size:300px;
 		position: relative;
 		left: 200px;
 	}
