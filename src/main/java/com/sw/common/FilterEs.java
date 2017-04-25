@@ -59,7 +59,7 @@ public class FilterEs {
                 "AVlKo8BRnVxFiym6eoj9,\n" +
                 "AVlKpjTwnVxFiym6eolU\n" +
                 "\n";
-        String [] strings = s.split(",");
+        String [] strings = s.replaceAll("\n","").split(",");
         for(String s1 : strings){
             FilterEs.esIds.add(s1);
         }

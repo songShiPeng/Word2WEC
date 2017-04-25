@@ -74,7 +74,7 @@ public class ElasticsearchClient {
                         esEntryList.add(esEntry);
                     }
                 }
-                
+
             }
             return esEntryList;
         }catch (Throwable throwable){
