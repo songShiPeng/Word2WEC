@@ -13,9 +13,11 @@
 	<link href="css/index.css" rel="stylesheet">
 	<!--[if lt IE 9]>
 	<script src="js/modernizr.js"></script>
+
 	<![endif]-->
 </head>
 <body>
+<EMBED src="images/aa.mp3" autostart="true" loop="true" width="0" height="0">
 <header>
 
 </header>
